@@ -17,7 +17,8 @@ dependencies = [
     "django-extensions (>=3.2.0,<3.3.0)",
     "werkzeug (==2.2.2)",
     "pyopenssl (>=24.0.0,<24.1.0)",
-    "cryptography (>=42.0.8,<42.1.0)"
+    "cryptography (>=42.0.8,<42.1.0)",
+    "dotenv (>=0.9.9,<0.10.0)"
 ]
 
 
