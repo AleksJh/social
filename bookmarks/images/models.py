@@ -4,7 +4,7 @@ from django.utils.text import slugify
 
 
 class Image(models.Model):
-    useer = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
                        related_name='images_created',
                        on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
