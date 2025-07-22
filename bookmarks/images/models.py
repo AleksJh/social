@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
-from django.utils.text import slugify
 from django.urls import reverse
+from django.utils.text import slugify
 from unidecode import unidecode
 
 
@@ -37,5 +37,4 @@ class Image(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('images:detail', args=[self.id,
-                                              self.slug])
+        return reverse("images:detail", args=[self.id, self.slug])

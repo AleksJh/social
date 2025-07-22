@@ -147,7 +147,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -191,5 +191,6 @@ SOCIAL_AUTH_PIPELINE = [
 
 if DEBUG:
     import mimetypes
-    mimetypes.add_type('application/javascrypt', '.js', True)
-    mimetypes.add_type('text/css', '.css', True)
+
+    mimetypes.add_type("application/javascrypt", ".js", True)
+    mimetypes.add_type("text/css", ".css", True)
