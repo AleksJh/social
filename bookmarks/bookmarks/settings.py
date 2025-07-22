@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "social_django",
     "django_extensions",
     "images.apps.ImagesConfig",
+    "easy_thumbnails",
 ]
 
 MIDDLEWARE = [
@@ -146,6 +147,16 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+THUMBNAIL_DEBUG = True
 
 
 AUTHENTICATION_BACKENDS = [
