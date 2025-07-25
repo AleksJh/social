@@ -1,10 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
-from django.core.paginator import Paginator, EmptyPage, \
-                                  PageNotAnInteger
 
 from .forms import ImageCreateForm
 from .models import Image
@@ -33,43 +32,47 @@ def image_detail(request, id, slug):
         request, "images/image/detail.html", {"section": "images", "image": image}
     )
 
+
 @login_required
 @require_POST
 def image_like(request):
-    image_id =request.POST.get('id')
-    action = request.POST.get('action')
+    image_id = request.POST.get("id")
+    action = request.POST.get("action")
     if image_id and action:
         try:
             image = Image.objects.get(id=image_id)
-            if action == 'like':
+            if action == "like":
                 image.users_like.add(request.user)
             else:
                 image.users_like.remove(request.user)
-            return JsonResponse({'status': 'ok'})
+            return JsonResponse({"status": "ok"})
         except Image.DoesNotExist:
-            return JsonResponse({'status': 'error'})
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+            return JsonResponse({"status": "error"})
+    return JsonResponse({"status": "error", "message": "Invalid request"})
+
 
 @login_required
 def image_list(request):
     images = Image.objects.all()
     paginator = Paginator(images, 8)
-    page = request.GET.get('page')
-    images_only = request.GET.get('images_only')
+    page = request.GET.get("page")
+    images_only = request.GET.get("images_only")
     try:
         images = paginator.page(page)
     except PageNotAnInteger:
         images = paginator.page(1)
     except EmptyPage:
         if images_only:
-            return HttpResponse('')
+            return HttpResponse("")
         images = paginator.page(paginator.num_pages)
     if images_only:
-        return render(request,
-                      'images/image/list_images.html',
-                      {'section': 'images',
-                       'images': images}),
-    return render(request,
-                  'images/image/list.html',
-                  {'section': 'images',
-                   'images': images})
+        return (
+            render(
+                request,
+                "images/image/list_images.html",
+                {"section": "images", "images": images},
+            ),
+        )
+    return render(
+        request, "images/image/list.html", {"section": "images", "images": images}
+    )
