@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator, EmptyPage, \
+                                  PageNotAnInteger
 
 from .forms import ImageCreateForm
 from .models import Image
@@ -25,8 +27,8 @@ def image_create(request):
     )
 
 
-def image_detail(request, image_id, slug):
-    image = get_object_or_404(Image, id=image_id, slug=slug)
+def image_detail(request, id, slug):
+    image = get_object_or_404(Image, id=id, slug=slug)
     return render(
         request, "images/image/detail.html", {"section": "images", "image": image}
     )
@@ -47,3 +49,27 @@ def image_like(request):
         except Image.DoesNotExist:
             return JsonResponse({'status': 'error'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+
+@login_required
+def image_list(request):
+    images = Image.objects.all()
+    paginator = Paginator(images, 8)
+    page = request.GET.get('page')
+    images_only = request.GET.get('images_only')
+    try:
+        images = paginator.page(page)
+    except PageNotAnInteger:
+        images = paginator.page(1)
+    except EmptyPage:
+        if images_only:
+            return HttpResponse('')
+        images = paginator.page(paginator.num_pages)
+    if images_only:
+        return render(request,
+                      'images/image/list_images.html',
+                      {'section': 'images',
+                       'images': images}),
+    return render(request,
+                  'images/image/list.html',
+                  {'section': 'images',
+                   'images': images})
