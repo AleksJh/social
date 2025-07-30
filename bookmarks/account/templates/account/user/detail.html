@@ -1,18 +1,22 @@
 {% extends "base.html" %}
+{% load static %}
 {% load thumbnail %}
 {% block title %}{{ user.get_full_name }}{% endblock %}
 {% block content %}
  <h1>{{ user.get_full_name }}</h1>
  <div class="profile-info">
- <img src="{% thumbnail user.profile.photo 180x180 %}" class="user-detail">
+{% if user.profile.photo %}
+    <img src="{% thumbnail user.profile.photo 180x180 %}" class="user-detail" alt="{{ user.get_full_name }}'s photo">
+{% else %}
+    <img src="{% static 'img/Profile_avatar_placeholder_large.png' %}" class="user-detail" alt="Default photo">
+{% endif %}
  </div>
  {% with total_followers=user.followers.count %}
  <span class="count">
  <span class="total">{{ total_followers }}</span>
  follower{{ total_followers|pluralize }}
  </span>
- <a href="#" data-id="{{ user.id }}" data-action="{% if request.user in user.
-followers.all %}un{% endif %}follow" class="follow button">
+ <a href="#" data-id="{{ user.id }}" data-action="{% if request.user in user.followers.all %}un{% endif %}follow" class="follow button">
 {% if request.user not in user.followers.all %}
  Follow
  {% else %}
@@ -25,7 +29,7 @@ followers.all %}un{% endif %}follow" class="follow button">
  {% endwith %}
 {% endblock %}
 {% block domready %}
- var const = '{% url "user_follow" %}';
+ var url = '{% url "user_follow" %}';
  var options = {
  method: 'POST',
  headers: {'X-CSRFToken': csrftoken},
@@ -51,7 +55,7 @@ followers.all %}un{% endif %}follow" class="follow button">
  var followerCount = document.querySelector('span.count .total');
  var totalFollowers = parseInt(followerCount.innerHTML);
  followerCount.innerHTML = previousAction === 'follow' ? totalFollowers + 1 :
-totalFollowers – 1;
+totalFollowers - 1;
  }
  })
  });

@@ -4,6 +4,6 @@ __pycache__/
 *.pyc
 .env
 cert.crt
-cert.key
+*.key
 *.pem
 *.cnf
