@@ -7,4 +7,3 @@ class ImagesConfig(AppConfig):
 
     def ready(self):
         import images.signals
-
